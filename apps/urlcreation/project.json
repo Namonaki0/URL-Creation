@@ -1,0 +1,52 @@
+{
+  "root": "apps/urlcreation",
+  "sourceRoot": "apps/urlcreation/src",
+  "projectType": "application",
+  "targets": {
+    "build": {
+      "executor": "@nrwl/node:webpack",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/urlcreation",
+        "main": "apps/urlcreation/src/main.ts",
+        "tsConfig": "apps/urlcreation/tsconfig.app.json",
+        "assets": ["apps/urlcreation/src/assets"]
+      },
+      "configurations": {
+        "production": {
+          "optimization": true,
+          "extractLicenses": true,
+          "inspect": false,
+          "fileReplacements": [
+            {
+              "replace": "apps/urlcreation/src/environments/environment.ts",
+              "with": "apps/urlcreation/src/environments/environment.prod.ts"
+            }
+          ]
+        }
+      }
+    },
+    "serve": {
+      "executor": "@nrwl/node:node",
+      "options": {
+        "buildTarget": "urlcreation:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "outputs": ["{options.outputFile}"],
+      "options": {
+        "lintFilePatterns": ["apps/urlcreation/**/*.ts"]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/urlcreation"],
+      "options": {
+        "jestConfig": "apps/urlcreation/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
