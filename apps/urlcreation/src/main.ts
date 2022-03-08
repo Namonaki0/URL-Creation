@@ -6,8 +6,26 @@
 import * as express from 'express';
 import { Request, Response} from "express";
 import * as randomstring from "randomstring";
+import { MongoClient } from "mongodb";
 
 const app = express();
+
+// const url = ``;
+// const client = new MongoClient(url);
+// const dbName = "urlcreation";
+
+
+// const connectToDb = async() => {
+//   await client.connect();
+//   console.log("Connected to DB");
+//   const db = client.db(dbName);
+//   const collections = db.collection("urls");
+// }
+
+// connectToDb()
+//   .then(console.log)
+//   .catch(console.error)
+//   .finally(() => client.close())
 
 app.get('/api', (req, res) => {
   res.send({ message: 'Welcome to this new app!' });
