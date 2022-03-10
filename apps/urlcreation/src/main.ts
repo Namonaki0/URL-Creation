@@ -8,37 +8,47 @@ const app = express();
 //? CONNECTION TO CLUSTER
 const uri = "mongodb+srv://cluster1.qabkv.mongodb.net/urlcreation";
 const client = new MongoClient(uri);
-// const dbName = "urlcreation";
+const dbName = "urlcreation";
+
+let collection;
 
 //? DB CONNECTION FUNCTION
 const connectToDb = async() => {
   try {
     await client.connect();
     console.log("Connected to DB");
-    // const db = client.db(dbName);
-    // const collections = db.collection("urls");
+    // await listDatabases(client);
+    const db = client.db(dbName);
+    collection = db.collection("urls");
   } 
   catch(err) {
       console.error(err)
   }
-  finally {
-    await client.close();
-  }
+  // finally {
+  //   await client.close();
+  // }
 }
 //? DB CONNECTION FUNCTION --- END
 
 connectToDb()
   .catch(console.error)
 
+// async function listDatabases(client) {
+//   const databasesList = await client.db().admin().listDatabases();
+//   console.log("Databases avaliable:");
+
+//   databasesList.databases.forEach(database => console.log(` - ${database.name}`))
+// }
 
 
 app.get('/api', (req, res) => {
   res.send({ message: 'Welcome to this new app!' });
 });
 
-app.get("/api/shorturl", (req: Request, res: Response) => {
+app.get("/api/shorturl", async (req: Request, res: Response) => {
   const generateRandomString = randomstring.generate(6);
-  return res.json({ url: `https://localhost:3333/api/${generateRandomString}`})
+  const insertResultInDb = await collection.insertOne({url: `https://localhost:3333/api/${generateRandomString}`})
+  return res.json(insertResultInDb)
 })
 
 const port = process.env.port || 3333;
