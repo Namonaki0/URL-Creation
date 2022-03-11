@@ -17,7 +17,7 @@ const connectToDb = async() => {
   try {
     await client.connect();
     console.log("Connected to DB");
-    // await listDatabases(client);
+    await listDatabases(client);
     const db = client.db(dbName);
     collection = db.collection("urls");
   } 
@@ -33,12 +33,14 @@ const connectToDb = async() => {
 connectToDb()
   .catch(console.error)
 
-// async function listDatabases(client) {
-//   const databasesList = await client.db().admin().listDatabases();
-//   console.log("Databases avaliable:");
+  //? LIST OF CURRENT DATABASES
+async function listDatabases(client) {
+  const databasesList = await client.db().admin().listDatabases();
+  console.log("Databases avaliable:");
 
-//   databasesList.databases.forEach(database => console.log(` - ${database.name}`))
-// }
+  databasesList.databases.forEach(database => console.log(` - ${database.name}`))
+}
+//? LIST OF CURRENT DATABASES --- END
 
 
 app.get('/api', (req, res) => {
