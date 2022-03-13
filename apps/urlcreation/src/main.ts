@@ -2,11 +2,12 @@ import * as express from 'express';
 import { Request, Response} from "express";
 import * as randomstring from "randomstring";
 import { MongoClient } from "mongodb";
+import { credentials } from './credentials';
 
 const app = express();
 
 //? CONNECTION TO CLUSTER
-const uri = "mongodb+srv://cluster1.qabkv.mongodb.net/urlcreation";
+const uri =  `${credentials}` ;
 const client = new MongoClient(uri);
 const dbName = "urlcreation";
 
@@ -33,9 +34,11 @@ const connectToDb = async() => {
 connectToDb()
   .catch(console.error)
 
+  let databasesList;
+
   //? LIST OF CURRENT DATABASES
 async function listDatabases(client) {
-  const databasesList = await client.db().admin().listDatabases();
+  databasesList = await client.db().admin().listDatabases();
   console.log("Databases avaliable:");
 
   databasesList.databases.forEach(database => console.log(` - ${database.name}`))
@@ -47,7 +50,7 @@ app.get('/api', (req, res) => {
   res.send({ message: 'Welcome to this new app!' });
 });
 
-app.get("/api/shorturl", async (req: Request, res: Response) => {
+app.post("/api/shorturl", async (req: Request, res: Response) => {
   const generateRandomString = randomstring.generate(6);
   const insertResultInDb = await collection.insertOne({url: `https://localhost:3333/api/${generateRandomString}`})
   return res.json(insertResultInDb)
