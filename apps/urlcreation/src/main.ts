@@ -52,8 +52,23 @@ app.get('/api', (req, res) => {
 
 app.post("/api/shorturl", async (req: Request, res: Response) => {
   const generateRandomString = randomstring.generate(6);
-  const insertResultInDb = await collection.insertOne({url: `https://localhost:3333/api/${generateRandomString}`})
-  return res.json(insertResultInDb)
+  const newLink = {
+    id: generateRandomString,
+    url: `https://localhost:3333/api/${generateRandomString}`
+  }
+  const insertResultInDb = await collection.insertOne({newLink})
+  return res.json({...insertResultInDb, result: newLink })
+})
+
+app.get("/api/:id", async(req: Request, res: Response) => {
+  const id = req.params.id;
+  const result = await collection.find({id});
+
+  if(result) {
+    return res.redirect("https://www.youtube.com/watch?v=ew04Md9YUvk&list=RDew04Md9YUvk&start_radio=1");
+  }
+
+  return res.send("Nothing available");
 })
 
 const port = process.env.port || 3333;
